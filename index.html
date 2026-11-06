@@ -85,11 +85,18 @@ dialog{border:0;border-radius:18px;max-width:560px;width:calc(100% - 32px);paddi
 dialog::backdrop{background:rgba(5,20,18,.6);backdrop-filter:blur(3px)}
 dialog h3{font-size:1.6rem;margin-bottom:10px}dialog ul{color:var(--muted);padding-left:20px}
 /* stack */
-.stack{display:flex;flex-wrap:wrap;gap:10px}
+.stack{display:grid;gap:22px}.stack h3{font-size:1rem;font-weight:600;color:var(--muted);margin:0 0 10px}.grp{display:flex;flex-wrap:wrap;gap:10px}
 .stack button{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-weight:500;transition:.15s}
 .stack button:hover{background:var(--brand);color:var(--brand-ink);transform:rotate(-2deg) scale(1.05)}
 .stack small{color:var(--muted);margin-left:4px}
 .stack button:hover small{color:inherit}
+.meta{display:flex;gap:8px;align-items:center;font-size:.82rem;color:var(--muted)}
+.st{background:var(--accent);color:#2a1c05;border-radius:6px;padding:1px 8px;font-weight:600}
+.status{margin:-6px 0 18px;color:var(--muted)}.status b{color:var(--ink)}
+.clear{background:none;border:0;padding:0;color:var(--brand);text-decoration:underline}
+.edu{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:6px}
+.edu div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.edu h3{font-size:1rem;margin-bottom:4px}
 footer{margin-top:80px;padding:40px 0 28px;border-top:1px solid var(--line);color:var(--muted);font-size:.92rem}
 .foot{display:grid;grid-template-columns:1.4fr 1fr auto;gap:28px;align-items:start}
 @media(max-width:760px){.foot{grid-template-columns:1fr}}
@@ -146,12 +153,14 @@ footer{margin-top:80px;padding:40px 0 28px;border-top:1px solid var(--line);colo
   <h2>Experiência</h2>
   <p class="sub">Clique em cada cargo para ver o que eu entrego.</p>
   <div class="tl" id="jobs"></div>
+  <div class="edu"><div><h3>Formação</h3>Universidade Federal de São João del-Rei (UFSJ)</div><div><h3>Idiomas</h3>Português (nativo) · Inglês (intermediário)</div></div>
 </section>
 
 <section id="projetos">
   <h2>Projetos</h2>
-  <p class="sub">Filtre por tecnologia e clique em um projeto para ver os detalhes.</p>
-  <div class="filters" id="filters" role="group" aria-label="Filtrar projetos por tecnologia"></div>
+  <p class="sub">Filtre por área e clique em um projeto para ver os detalhes.</p>
+  <div class="filters" id="filters" role="group" aria-label="Filtrar projetos por área"></div>
+  <p class="status" id="status" hidden></p>
   <div class="grid" id="grid"></div>
 </section>
 
@@ -203,24 +212,44 @@ const STATS=[
   {n:600,s:"+",t:"convidados organizados no Réveillon do resort"}
 ];
 const JOBS=[
-  {t:"Desenvolvedor Web",o:"Santíssimo Resort Tiradentes",d:"Nov/2022 – hoje",
-   l:["Sistemas internos para operação, estoque e reservas do resort.","Dashboards de dados para apoiar decisões da gestão.","Gestão de dispositivos Android corporativos (NetPulse MDM).","Redução de erros e ganho de estabilidade nos sistemas em produção."]},
+  {t:"Desenvolvedor de sistemas",o:"Santíssimo Resort Tiradentes",d:"Nov/2022 – hoje",
+   l:["Desenvolvo e mantenho os sistemas internos do resort: estoque e uniformes, agenda do SPA, ceia de Réveillon e dispositivos Android corporativos.","Transformei rotinas de planilha e papel em aplicações web com login, perfis de acesso, dashboards e relatórios exportáveis.","Mais de 340 usuários ativos e 20 operadores simultâneos, com análise de dados 150% mais rápida e erros operacionais quase eliminados.","Gero apresentações executivas e análises a partir de dados da operação (check-outs, avaliações de hóspedes, vouchers do SPA)."]},
   {t:"Fundador",o:"Mundo Digital",d:"Atual",
-   l:["Empresa de sistemas digitais; participo da aprovação de todos os projetos.","Sites e plataformas sob medida para pequenos negócios."]}
+   l:["Empresa de soluções digitais: sites, aplicativos e automações.","Atuo como fundador e na aprovação de todos os projetos."]}
 ];
 const PROJ=[
-  {n:"Gestor de Uniformes PRO",p:"Controle de estoque e entrega de uniformes do resort.",t:["React","TypeScript","Tailwind","Google Sheets"],
-   l:["Estoque, entregas e relatórios em PDF.","Interface refeita para uso rápido no dia a dia."]},
-  {n:"Resort SPA Scheduler",p:"Agendamento de atendimentos do SPA.",t:["React","TypeScript","Tailwind"],
-   l:["Agenda de atendimentos para a equipe do SPA."]},
-  {n:"Réveillon Resort",p:"Reservas de mesas e organização da ceia de Réveillon.",t:["React","Vite","Tailwind","Firebase"],
-   l:["Mapa de mesas e reservas em tempo real.","Usado para organizar mais de 600 convidados.","Foco forte no visual."]},
-  {n:"NetPulse MDM",p:"Backend para gerenciar dispositivos Android da empresa.",t:["Node.js","Express","Google AMAPI"],
-   l:["Cadastro e controle de dispositivos corporativos.","Integração com a Android Management API do Google."]},
-  {n:"Plataforma para imobiliária",p:"Site público de imóveis com painel administrativo e planos de licença.",t:["React","Vite","Tailwind"],
+  {n:"Gestor de Uniformes PRO",c:"Sistemas internos",p:"Estoque, movimentações e compras de uniformes, com portal do colaborador e dashboards.",
+   t:["React","TypeScript","Vite","Tailwind","shadcn/ui","Express","Google Sheets","Google Apps Script"],link:"https://unifome.vercel.app",
+   l:["Estoque, transferências entre setores, manutenção e compras, com portal do colaborador e operadores.","Sincronização com Google Sheets por servidor proxy com cache e fallback, eliminando falhas de CORS e timeouts.","Modo tablet com validação por PIN (hash SHA-256) para assinatura eletrônica do colaborador em outro dispositivo.","Relatórios em PDF e Excel e inventário guiado em várias etapas."]},
+  {n:"Réveillon Resort",c:"Sistemas internos",p:"Reservas de mesas com mapa interativo e atualização em tempo real.",
+   t:["React","TypeScript","Vite","Tailwind","Firebase"],
+   l:["Mapa visual interativo e link individual por convidado para escolher e dividir mesas.","Painel administrativo com editor visual do salão e gestão de convidados e usuários.","Operações em lote (writeBatch) para manter mesas e convidados consistentes.","Usado em evento com mais de 600 convidados."]},
+  {n:"Resort SPA Scheduler",c:"Sistemas internos",p:"Agendamento de massagens com agenda semanal e painel de BI.",
+   t:["React","TypeScript","Vite","Recharts","pptxgenjs","Google Apps Script"],
+   l:["Agenda semanal, disponibilidade, salas, serviços e preços, com impressão da agenda diária.","Sincronização resiliente: fila offline, reenvio automático e sincronização entre abas (BroadcastChannel).","Análise de vouchers e geração de slides executivos em PowerPoint direto no navegador."]},
+  {n:"NetPulse MDM",c:"Automação e dados",p:"Backend para gerenciar dispositivos Android corporativos.",
+   t:["Node.js","Express","Google AMAPI"],
+   l:["Integração com a Android Management API do Google.","Documentação das limitações de GPS e espelhamento de tela."]},
+  {n:"Robô PMS",c:"Automação e dados",st:"Em desenvolvimento",p:"Robôs que acessam o PMS do resort e extraem relatórios automaticamente.",
+   t:["Playwright","TypeScript","Node.js"],
+   l:["Robô gerente que abre o portal e mantém a sessão; outros robôs extraem relatórios sob demanda.","O PMS não tem API, então a extração é feita por automação da interface.","Login já funcionando; próximo passo é extrair relatórios completos."]},
+  {n:"Análises executivas da operação",c:"Automação e dados",p:"Apresentações e análises a partir de dados reais do resort.",
+   t:["Análise de dados"],
+   l:["Consolidação de avaliações de hóspedes, check-outs e vouchers do SPA.","Apresentações executivas para apoiar decisões da gestão."]},
+  {n:"Plataforma para imobiliária",c:"Sites e plataformas",p:"Site público de imóveis com painel administrativo e planos de licença.",
+   t:["React","Vite","Tailwind"],
    l:["Vitrine de imóveis para o cliente final.","Painel para cadastrar e gerenciar anúncios."]},
-  {n:"Gesso Express",p:"Site comercial focado em conversão, SEO e desempenho.",t:["React","Vite","Tailwind"],
-   l:["Melhorias para gerar mais contatos e vendas.","Otimização de SEO e velocidade de carregamento."]}
+  {n:"Gesso Express",c:"Sites e plataformas",p:"Site comercial focado em conversão, SEO e desempenho.",
+   t:["React","Vite","Tailwind"],
+   l:["Foco em conversão, SEO, desempenho e formulários de contato.","Para empresa de drywall e gesso na região do Campo das Vertentes (MG)."]},
+  {n:"Mundo Digital",c:"Sites e plataformas",p:"Minha empresa de soluções digitais: sites, aplicativos e automações.",
+   t:["Vercel"],link:"https://sistemas-digitais-neon.vercel.app",
+   l:["Desenvolvimento de sites, aplicativos e automações sob medida.","Atuo como fundador e na aprovação de todos os projetos."]}
+];
+const STACK=[
+  ["Front-end",["React","TypeScript","Vite","Tailwind","shadcn/ui","Recharts"]],
+  ["Back-end e dados",["Node.js","Express","Firebase","Google Apps Script","Google Sheets","Google AMAPI","Playwright"]],
+  ["Relatórios e entrega",["pptxgenjs","Análise de dados","Vercel"]]
 ];
 /* ===== fim dos dados ===== */
 const $=s=>document.querySelector(s),el=(h)=>{const d=document.createElement('div');d.innerHTML=h.trim();return d.firstChild};
@@ -251,19 +280,29 @@ $('#jobs').append(...JOBS.map((j,i)=>{const n=el(`<div class="job"><button aria-
   const b=n.querySelector('button');b.onclick=()=>{const o=n.classList.toggle('open');b.setAttribute('aria-expanded',o)};if(i===0){n.classList.add('open');b.setAttribute('aria-expanded',true)}return n}));
 
 /* projetos + filtro */
-const techs=[...new Set(PROJ.flatMap(p=>p.t))];
-let cur='Todos';
-const fbox=$('#filters'),grid=$('#grid');
-function applyFilter(t){cur=t;fbox.querySelectorAll('.f').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));grid.querySelectorAll('.proj').forEach(c=>c.hidden=!(t==='Todos'||c.dataset.tags.split('|').includes(t)))}
-fbox.append(...['Todos',...techs].map(t=>{const b=el(`<button class="f" data-t="${t}" aria-pressed="${t==='Todos'}">${t}</button>`);b.onclick=()=>applyFilter(t);return b}));
-grid.append(...PROJ.map(p=>{const c=el(`<button class="proj" data-tags="${p.t.join('|')}"><h3>${p.n}</h3><p>${p.p}</p><div class="tags">${p.t.map(x=>`<i>${x}</i>`).join('')}</div></button>`);
-  c.onclick=()=>{$('#dlgbody').innerHTML=`<h3>${p.n}</h3><p>${p.p}</p><ul>${p.l.map(x=>`<li>${x}</li>`).join('')}</ul><div class="tags">${p.t.map(x=>`<i>${x}</i>`).join('')}</div>`;$('#dlg').showModal()};return c}));
+const CATS=['Todos',...new Set(PROJ.map(p=>p.c))];
+const fbox=$('#filters'),grid=$('#grid'),stt=$('#status');
+function applyFilter(t){
+  fbox.querySelectorAll('.f').forEach(b=>b.setAttribute('aria-pressed',b.dataset.t===t));
+  let n=0;
+  grid.querySelectorAll('.proj').forEach(c=>{const ok=t==='Todos'||c.dataset.cat===t||c.dataset.tags.split('|').includes(t);c.hidden=!ok;if(ok)n++});
+  const isCat=CATS.includes(t);stt.hidden=isCat;
+  if(!isCat)stt.innerHTML=`Mostrando ${n} ${n===1?'projeto':'projetos'} com <b>${t}</b>. <button class="clear">Limpar filtro</button>`;
+}
+stt.addEventListener('click',e=>{if(e.target.classList.contains('clear'))applyFilter('Todos')});
+fbox.append(...CATS.map(t=>{const b=el(`<button class="f" data-t="${t}" aria-pressed="${t==='Todos'}">${t}</button>`);b.onclick=()=>applyFilter(t);return b}));
+const tagsHtml=a=>a.map(x=>`<i>${x}</i>`).join('');
+const metaHtml=p=>`<div class="meta"><span>${p.c}</span>${p.st?`<span class="st">${p.st}</span>`:''}</div>`;
+grid.append(...PROJ.map(p=>{const c=el(`<button class="proj" data-cat="${p.c}" data-tags="${p.t.join('|')}">${metaHtml(p)}<h3>${p.n}</h3><p>${p.p}</p><div class="tags">${tagsHtml(p.t)}</div></button>`);
+  c.onclick=()=>{$('#dlgbody').innerHTML=`${metaHtml(p)}<h3>${p.n}</h3><p>${p.p}</p><ul>${p.l.map(x=>`<li>${x}</li>`).join('')}</ul><div class="tags">${tagsHtml(p.t)}</div>${p.link?`<p><a class="btn alt" href="${p.link}" target="_blank" rel="noopener">Abrir projeto ↗</a></p>`:''}`;$('#dlg').showModal()};return c}));
 $('#close').onclick=()=>$('#dlg').close();
 $('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')e.target.close()});
 
 /* tecnologias */
-$('#stackbox').append(...techs.map(t=>{const n=PROJ.filter(p=>p.t.includes(t)).length;const b=el(`<button>${t}<small>${n}</small></button>`);
-  b.onclick=()=>{applyFilter(t);$('#projetos').scrollIntoView({behavior:reduce?'auto':'smooth'});toast(`Mostrando projetos com ${t}`)};return b}));
+const used=new Set(PROJ.flatMap(p=>p.t));
+$('#stackbox').append(...STACK.map(([g,list])=>{const box=el(`<div><h3>${g}</h3><div class="grp"></div></div>`);
+  box.querySelector('.grp').append(...list.filter(t=>used.has(t)).map(t=>{const n=PROJ.filter(p=>p.t.includes(t)).length;const b=el(`<button>${t}<small>${n}</small></button>`);
+    b.onclick=()=>{applyFilter(t);$('#projetos').scrollIntoView({behavior:reduce?'auto':'smooth'})};return b}));return box}));
 
 /* contato */
 const C=[['E-mail',ME.email,'copy'],['E-mail Mundo Digital',ME.email2,'copy'],['LinkedIn',ME.linkedin,'link'],['GitHub',ME.github,'link'],['Mundo Digital',ME.site,'link']];
